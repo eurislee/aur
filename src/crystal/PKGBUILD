@@ -1,0 +1,40 @@
+# Maintainer: Euris Lee <eurislee@gmail.com>
+
+_pkgname=crystal
+pkgname=crystal-git
+pkgver=0.1.0
+pkgrel=1
+pkgdesc="Desktop-independent graphical login manager for X11"
+arch=('x86_64')
+url="https://github.com/eurislee/crystal"
+license=('MIT')
+depends=('pam' 'libxmu' 'libpng' 'libjpeg' 'libxft' 'libxrandr' 'xorg-xauth'
+         'ttf-font')
+makedepends=('cmake' 'freeglut')
+source=(https://github.com/eurislee/crystal/releases/download/$pkgver/$_pkgname-$pkgver.tar.gz)
+sha256sums=('6bb220be8869cd81b62a09e711924a4dcce87fa617572b9b8ea854219f4085c9')
+
+build() {
+  cd $_pkgname-$pkgver
+
+  cmake \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_SKIP_RPATH=ON \
+    -DUSE_PAM=yes \
+    -DUSE_CONSOLEKIT=no
+  make
+}
+
+package() {
+
+  cd $_pkgname-$pkgver
+
+  make DESTDIR="$pkgdir" install
+
+  install -Dm 644 "$srcdir/$_pkgname-$pkgver/crystal.pam" "$pkgdir/etc/pam.d/crystal"
+  install -Dm 644 "$srcdir/$_pkgname-$pkgver/crystallock.pam" "$pkgdir/etc/pam.d/crystallock"
+  install -Dm 644 "$srcdir/$_pkgname-$pkgver/crystal.logrotate" "$pkgdir/etc/logrotate.d/crystal"
+  install -Dm 644 "$srcdir/$_pkgname-$pkgver/crystallock.conf" "$pkgdir/etc/crystallock.conf"
+
+}

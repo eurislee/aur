@@ -1,0 +1,27 @@
+# Maintainer: Euris Lee <eurislee@gmail.com>
+
+pkgname=sylris
+pkgver=0.1.0
+pkgrel=1
+pkgdesc="Tiling window manager based on binary space partitioning"
+arch=('x86_64')
+url="https://github.com/eurislee/sylris"
+license=('MIT')
+depends=('xcb-util' 'xcb-util-wm' 'xcb-util-keysyms')
+optdepends=('sxhkd: to define keyboard and pointer bindings'
+            'xdo: for the example panel')
+makedepends=('git')
+source=('git+https://github.com/eurislee/sylris.git#branch=main')
+md5sums=('SKIP')
+
+build() {
+  cd $pkgname
+
+  make
+}
+
+package() {
+  cd $pkgname
+
+  make DESTDIR="$pkgdir" install
+}

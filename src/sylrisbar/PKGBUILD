@@ -1,0 +1,25 @@
+# Maintainer: Euris Lee <eurislee@gmail.com>
+
+pkgname=sylrisbar
+pkgver=0.1.0
+pkgrel=1
+pkgdesc="A modern and lightweight status bar for X window managers"
+arch=('x86_64')
+url="https://github.com/eurislee/sylrisbar"
+license=('MIT')
+depends=('libxcb' 'libxft' 'libx11')
+makedepends=('git')
+source=('git+https://github.com/eurislee/sylrisbar.git#branch=main')
+md5sums=('SKIP')
+
+build() {
+  cd $pkgname
+
+  make
+}
+
+package() {
+  cd $pkgname
+
+  make DESTDIR="$pkgdir" install
+}

@@ -1,0 +1,30 @@
+pkgname=webstorm
+pkgver=2021.1.3
+pkgrel=1
+pkgdesc='JavaScript IDE and HTML editor'
+arch=('x86_64')
+url='https://www.jetbrains.com/webstorm/'
+license=('custom')
+depends=('glib2')
+options=("!strip")
+source=("https://download.jetbrains.com/webstorm/WebStorm-${pkgver}.tar.gz"
+        webstorm.desktop)
+optdepends=("webstorm-jre: JetBrains custom Java Runtime"
+            "java-runtime: JRE - Required if webstorm-jre is not installed"
+            "gnome-keyring: save login/deployment credentials safely")
+sha256sums=("")
+
+package_webstorm() {
+
+  install -dm755 "${pkgdir}"/opt/
+  install -dm755 "${pkgdir}"/usr/local/bin/
+  install -dm755 "${pkgdir}"/usr/local/share/applications/
+  install -dm755 "${pkgdir}"/usr/local/share/pixmaps/
+
+  cp -a "${srcdir}"/WebStorm-${pkgver}/ "${pkgdir}"/opt/${pkgname}
+  rm -rf "${pkgdir}"/opt/${pkgname}/jbr
+
+  ln -s /opt/${pkgname}/bin/${pkgname}.sh "${pkgdir}"/usr/local/bin/${pkgname}
+  install -m644 "${srcdir}"/${pkgname}.desktop "${pkgdir}"/usr/local/share/applications/
+  install -m644 "${pkgdir}"/opt/${pkgname}/bin/${pkgname}.svg "${pkgdir}"/usr/local/share/pixmaps/${pkgname}.svg
+}

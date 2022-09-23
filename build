@@ -1,0 +1,49 @@
+#!/bin/bash
+
+# Usage:
+# ./build add <pkgname>       # add a package
+# ./build add <pkgname> -f    # add a package and force clean databases
+
+key="AD3EF92601F98839"
+root_dir="$(git rev-parse --show-toplevel)"
+arch="$(uname -m)"
+ext='pkg.tar.zst'
+
+if [ "${1}" == 'add' ]; then
+  cd ${root_dir}/src/${2}
+  updpkgsums
+  makepkg --config "${root_dir}/makepkg.${arch}.conf" --sign --syncdeps --rmdeps
+  mv *${ext}* ${root_dir}/${arch}
+  find ./ -type d -name "[!.]*" | xargs rm -rf
+  find ./ -type f -name "[^P][^K][^G][^B][^U][^I][^L][^D]*" | xargs rm -rf
+  cd ${root_dir}/${arch}
+  if [ -z "${3}" ]; then
+    repo-add --verify --sign --key ${key} euris.db.tar.gz *${2}*${ext}
+    find ./ -name "euris*old*" | xargs rm -rf
+  else
+    find ./ -name "euris*" | xargs rm -rf
+    repo-add --verify --sign --key ${key} euris.db.tar.gz *${ext}
+  fi
+elif [ "${1}" == 'update' ]; then
+  cd ${root_dir}/src/${2}
+  updpkgsums
+  makepkg --config "${root_dir}/makepkg.${arch}.conf" --sign --syncdeps --rmdeps
+  rm ${root_dir}/${arch}/*${2}*
+  mv *${ext}* ${root_dir}/${arch}
+  find ./ -type d -name "[!.]*" | xargs rm -rf
+  find ./ -type f -name "[^P][^K][^G][^B][^U][^I][^L][^D]*" | xargs rm -rf
+  cd ${root_dir}/${arch}
+  if [ -z "${3}" ]; then
+    repo-remove --verify --sign --key ${key} euris.db.tar.gz ${2}
+    repo-add --verify --sign --key ${key} euris.db.tar.gz *${2}*${ext}
+    find ./ -name "euris*old*" | xargs rm -rf
+  else
+    find ./ -name "euris*" | xargs rm -rf
+    repo-add --verify --sign --key ${key} euris.db.tar.gz *${ext}
+  fi
+fi
+
+BBLUE='\033[1;34m'
+NC='\033[0m' # No Color
+printf "\n\n${BBLUE}==> Remember to update package list in README.${NC}\n"
+printf "${BBLUE}==> Remember to check if old package files have been deleted.${NC}\n"

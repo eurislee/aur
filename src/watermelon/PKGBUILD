@@ -1,0 +1,25 @@
+# Maintainer: Euris Lee <eurislee@gmail.com>
+
+pkgname=watermelon
+pkgver=0.1.0
+pkgrel=1
+pkgdesc="Simple terminal emulator for Wayland and X11 with OpenGL rendering and minimal dependencies"
+arch=('x86_64')
+url="https://github.com/eurislee/watermelon"
+license=('MIT')
+depends=('mesa' 'freetype2' 'fontconfig' 'libxkbcommon' 'libxrandr' 'libutf8proc')
+makedepends=('git')
+source=('git+https://github.com/eurislee/watermelon.git#branch=main')
+md5sums=('SKIP')
+
+build() {
+  cd $pkgname
+
+  make
+}
+
+package() {
+  cd $pkgname
+
+  make PREFIX=/usr/local DESTDIR="$pkgdir" install
+}

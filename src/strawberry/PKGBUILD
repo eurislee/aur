@@ -1,0 +1,26 @@
+# Maintainer: Euris Lee <eurislee@gmail.com>
+
+pkgname=strawberry
+pkgver=0.1.0
+pkgrel=1
+pkgdesc="Tiling window manager based on binary space partitioning"
+arch=('x86_64')
+url="https://github.com/eurislee/strawberry"
+license=('MIT')
+depends=('xcb-util' 'xcb-util-wm' 'xcb-util-keysyms')
+optdepends=('sxhkd: to define keyboard and pointer bindings'
+            'xdo: for the example panel')
+makedepends=('git')
+source=('git+https://github.com/eurislee/strawberry.git#branch=main')
+md5sums=('SKIP')
+
+build() {
+  CFLAGS+=' -fcommon'
+  make -C "$pkgname" PREFIX=/usr
+}
+
+package() {
+  cd "$pkgname"
+  make PREFIX=/usr DESTDIR="$pkgdir" install
+  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}

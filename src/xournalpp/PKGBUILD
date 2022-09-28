@@ -1,0 +1,27 @@
+# Maintainer: Euris Lee <eurislee@gmail.com>
+
+pkgname=xournalpp
+pkgver=1.1.1
+pkgrel=1
+pkgdesc='Handwriting notetaking software with PDF annotation support'
+url='https://github.com/xournalpp/xournalpp'
+license=('GPL2')
+arch=('x86_64')
+optdepends=('texlive-latexextra: LaTeX package')
+makedepends=('git' 'cmake' 'doxygen' 'graphviz')
+depends=('gtk3' 'poppler-glib' 'libxml2' 'portaudio' 'libsndfile' 'lua'
+         'libzip' 'texlive-bin')
+source=("git+https://github.com/xournalpp/xournalpp.git")
+sha256sums=('SKIP')
+
+build() {
+	cd "${srcdir}/${pkgname}"
+	cmake -DCMAKE_INSTALL_PREFIX=/usr
+	make translations
+	make
+}
+
+package() {
+	cd "${srcdir}/${pkgname}"
+	make DESTDIR="${pkgdir}" install
+}

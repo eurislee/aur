@@ -18,19 +18,19 @@
 Receive from key server.
 
 ```shell
-sudo pacman-key --recv-keys 4E413B7991B74584
+sudo pacman-key --recv-keys 283655F102243F44
 ```
 
 **Step 2.** It's recommended to verify the fingerprint.
 
 ```shell
-sudo pacman-key --finger 4E413B7991B74584
+sudo pacman-key --finger 283655F102243F44
 ```
 
 **Step 3.** Locally sign the key.
 
 ```shell
-sudo pacman-key --lsign-key 4E413B7991B74584
+sudo pacman-key --lsign-key 283655F102243F44
 ```
 
 **Step 4.** Now in your `/etc/pacman.conf`, add this at the end of the file:

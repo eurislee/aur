@@ -4,7 +4,7 @@
 # ./build add <pkgname>       # add a package
 # ./build add <pkgname> -f    # add a package and force clean databases
 
-key="4E413B7991B74584"
+key="283655F102243F44"
 root_dir="$(git rev-parse --show-toplevel)"
 arch="$(uname -m)"
 ext='pkg.tar.zst'
